@@ -37,12 +37,12 @@ const app = express()
 
 app.use(bodyParser.json({ limit: '192mb' })) 
 app.use(bodyParser.urlencoded({ extended: true })) 
-
 app.use(expressLogger.logger({
 	winstonInstance: logger,
 	msg: chalk.grey("{{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms {{req.ip}}"),
 	colorize: true,
 	meta: false
 }))
+require('./routes/auth_routes')(app, logger, config)
 
 app.listen(config.PORT, () => console.log(`Job Hunt Buddy server running on PORT ${config.PORT}`))
