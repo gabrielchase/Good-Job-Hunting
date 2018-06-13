@@ -43,6 +43,9 @@ app.use(expressLogger.logger({
 	colorize: true,
 	meta: false
 }))
+
+require('./middlewares')(config)
 require('./routes/auth_routes')(app, logger, config)
+require('./routes/job_routes')(app, logger, config)
 
 app.listen(config.PORT, () => console.log(`Job Hunt Buddy server running on PORT ${config.PORT}`))
