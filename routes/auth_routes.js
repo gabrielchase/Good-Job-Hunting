@@ -32,7 +32,7 @@ module.exports = (app, logger, config) => {
                 const authJson = {
                     _id: user._id,
                     email: email, 
-                    jwt: signedJwt
+                    token: signedJwt
                 }
                 success(res, authJson)
             } else {
