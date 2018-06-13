@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const User = require('../models/user')
 const { success, fail } = require('../utils')
@@ -16,6 +17,27 @@ module.exports = (app, logger, config) => {
                 created_on: user.created_on
             }
             success(res, userJson)
+        } catch (err) {
+            fail(res, err)
+        }
+    })
+
+    app.post('/api/login', async (req, res) => {
+        const { email, password } = req.body
+        try {
+            const user = await User.findOne({ email })
+            const match = await bcrypt.compare(password, user.password)
+            if (match) {
+                const signedJwt = jwt.sign({ _id: user._id, email: email }, config.JWT_SECRET, { expiresIn: '1d' })
+                const authJson = {
+                    _id: user._id,
+                    email: email, 
+                    jwt: signedJwt
+                }
+                success(res, authJson)
+            } else {
+                throw new Error(`Error authenticating ${email}`)
+            }
         } catch (err) {
             fail(res, err)
         }

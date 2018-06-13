@@ -1,6 +1,7 @@
 {
 	"DB_PORT": "5984",
     "DB_URL": "mongodb://admin1:password1@ds259250.mlab.com:59250/job-hunt-buddy-dev",
+    "JWT_SECRET": "secretman",
     "SALT_ROUNDS": 10,
     "PORT": "3000"
 }
