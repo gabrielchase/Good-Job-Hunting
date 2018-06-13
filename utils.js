@@ -1,7 +1,7 @@
 const logger = require('winston')
 
 module.exports = {
-    success: (res, data) => {
+    success: (res, data={}) => {
         const obj = {
             success: true,
             data: data
