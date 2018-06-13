@@ -9,7 +9,7 @@ const logger = new (winston.Logger)({
     level: 'debug',
     formatter: (opts) => {
         return opts.timestamp() + ' [' + opts.level + '] ' +
-            (undefined !== opts.message ? opts.message : '')
+        (undefined !== opts.message ? opts.message : '')
     },
     transports: [
         new (winston.transports.Console)({
@@ -19,13 +19,19 @@ const logger = new (winston.Logger)({
             },
             formatter: (opts) => {
                 return opts.timestamp() + ' [' + opts.level + '] ' +
-                    (undefined !== opts.message ? opts.message : '')
+                (undefined !== opts.message ? opts.message : '')
             }
         }),
         new winston.transports.File({ filename: 'app-logs.log' })
     ]
 })
 logger.setLevels(winston.config.syslog.levels)
+
+const config = require('./config/config')(logger)
+mongoose.connect(config.DB_URL)
+mongoose.Promise = global.Promise
+const db = mongoose.connection
+db.on('error', console.error.bind(console, 'MongoDB connection error'))
 
 const app = express()
 
@@ -39,4 +45,4 @@ app.use(expressLogger.logger({
 	meta: false
 }))
 
-app.listen(3000, () => console.log(`Server running on PORT ${3000}`))
+app.listen(config.PORT, () => console.log(`Job Hunt Buddy server running on PORT ${config.PORT}`))
