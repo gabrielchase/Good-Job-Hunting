@@ -64,4 +64,19 @@ module.exports = (app, logger, config) => {
             fail(res, err)
         }
     })
+
+    app.delete('/api/job/:job_id', checkJWT, async (req, res) => {
+        const { job_id } = req.params
+        try {
+            let job = await Job.findById(job_id)
+            
+            if (job.user_id !== req.user._id) throw new Error('Unauthorized')
+
+            await job.remove()
+            
+            success(res)
+        } catch (err) {
+            fail(res, err)
+        }
+    })
 }
