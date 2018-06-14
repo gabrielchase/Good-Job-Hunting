@@ -1,13 +1,17 @@
-const { success, fail } = require('../utils')
+const { success, fail, handleSalary } = require('../utils')
 
 const Job = require('../models/job')
 
 module.exports = (app, logger, config) => {    
-    app.get('/api/user/:user_id/jobs', checkJWT, async (req, res) => {
+    app.get('/api/user/:user_id/jobs', checkJWT, checkIfSameUser, async (req, res) => {
+        const { user_id } = req.params
         try {
-            console.log(req.params)
-            console.log(req.user)
-            success(res)
+            let query = {
+                user_id: user_id
+            }
+            
+            const jobs = await Job.find(query)
+            success(res, jobs)
         } catch (err) {
             fail(res, err)
         }
@@ -15,13 +19,18 @@ module.exports = (app, logger, config) => {
 
     app.post('/api/job', checkJWT, async (req, res) => {
         try {
+            if (req.body.salary) {
+                let { currency, value } = handleSalary(req.body.salary)
+                req.body.salary_currency = currency
+                req.body.salary = value
+            }
             req.body.created_on = new Date()
             req.body.due_date = new Date(req.body.due_date)
             req.body.user_id = req.user._id 
             const job = new Job(req.body)
             job.save()
             success(res, job)
-        } catch (error) {
+        } catch (err) {
             fail(res, err)
         }
     })
@@ -47,11 +56,9 @@ module.exports = (app, logger, config) => {
             if (position) job.position = position
             if (priority) job.priority = priority
             if (salary) {
-                let [salary_currency, salary_value] = salary.split(' ')
-                salary_value = salary_value.replace(/,/g, '')
-                salary_value = parseInt(salary_value)
-                job.salary = salary_value
-                job.salary_currency = salary_currency
+                let { currency, value } = handleSalary(salary)
+                job.salary_currency = currency
+                job.salary = value
             }
             if (skills) job.skills = skills
             if (status) job.status = status
@@ -73,7 +80,7 @@ module.exports = (app, logger, config) => {
             if (job.user_id !== req.user._id) throw new Error('Unauthorized')
 
             await job.remove()
-            
+
             success(res)
         } catch (err) {
             fail(res, err)
