@@ -7,12 +7,20 @@ module.exports = function({ JWT_SECRET }) {
         try {
             const token  = req.headers.authorization.split(' ')[1]
             if (token) {
-                const decodedUser = await jwt.verify(token, JWT_SECRET)
-                req.user = decodedUser
+                req.user = await jwt.verify(token, JWT_SECRET)
                 next()
             }
         } catch (err) {
             fail(res, err)
         }
+    },
+    checkIfSameUser = async(req, res, next) => {
+        const { _id } = req.user
+        const { user_id } = req.params
+
+        if (_id !== user_id) 
+            fail(res, new Error('Unauthorized'))
+        else    
+            next()
     }
 }
