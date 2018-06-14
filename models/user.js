@@ -8,6 +8,8 @@ const User = mongoose.Schema({
     first_name: { type: String },
     last_name: { type: String },
     birthday: { type: String },
+    city: { type: String },
+    country: { type: String },
     occupation: { type: String }
 })
 
