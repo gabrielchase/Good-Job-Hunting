@@ -20,7 +20,8 @@ module.exports = (app, logger, config) => {
             const newUserData = {
                 first_name: first_name,
                 last_name: last_name, 
-                birthday: birthday, 
+                birthday: new Date(birthday),
+                modified_on: new Date(),
                 occupation: occupation
             }
             const updatedUser = await User.findByIdAndUpdate(user_id, { $set: newUserData }, { new: true, multi: true})
