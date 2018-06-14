@@ -15,5 +15,14 @@ module.exports = {
             message: err.message
         }
         res.json(obj)
+    },
+    handleSalary: (salary) => {
+        // Input: 'SGD 3,600' or 'PHP 35,000'
+        // Output: { currency: SGD, value: 3600 } or { currency: PHP, value: 35000 }
+        
+        let [currency, value] = salary.split(' ')
+        value = value.replace(/,/g, '')
+        value = parseInt(value)
+        return { currency, value }
     }
 }
