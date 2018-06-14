@@ -29,4 +29,14 @@ module.exports = (app, logger, config) => {
             fail(res, err)
         }
     })
+
+    app.delete('/api/user/:user_id', checkJWT, checkIfSameUser, async (req, res) => {
+        const { user_id } = req.params
+        try {
+            await User.findByIdAndRemove(user_id)
+            success(res)
+        } catch (err) {
+            fail(res, err)
+        }
+    })
 }
