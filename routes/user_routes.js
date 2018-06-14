@@ -12,4 +12,21 @@ module.exports = (app, logger, config) => {
             fail(res, err)
         }
     })
+
+    app.put('/api/user/:user_id', checkJWT, checkIfSameUser, async (req, res) => {
+        const { user_id } = req.params
+        const { first_name, last_name, birthday, occupation } = req.body
+        try {
+            const newUserData = {
+                first_name: first_name,
+                last_name: last_name, 
+                birthday: birthday, 
+                occupation: occupation
+            }
+            const updatedUser = await User.findByIdAndUpdate(user_id, { $set: newUserData }, { new: true, multi: true})
+            success(res, updatedUser)
+        } catch (err) {
+            fail(res, err)
+        }
+    })
 }
