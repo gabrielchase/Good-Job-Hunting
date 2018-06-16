@@ -9,7 +9,7 @@ module.exports = (app, logger, config) => {
         const { email, password } = req.body 
         try {
             const hashedPassword = await bcrypt.hash(password, config.SALT_ROUNDS)
-            const user = new User({ email, password: hashedPassword, created_on: new Date() })
+            const user = new User({ email, password: hashedPassword })
             await user.save()
             const userJson = {
                 _id: user._id,

@@ -5,11 +5,11 @@ const Job = mongoose.Schema({
     company: { type: String },
     country: { type: String },
     cover_letter: { type: String },
-    due_date: { type: String },
-    created_on: { type: String },
+    due_date: { type: Date },
+    created_on: { type: Date, default: Date.now },
     link: { type: String },
     modified_by: { type: String },
-    modified_on: { type: String },
+    modified_on: { type: Date },
     notes: { type: String },
     position: { type: String },
     priority: { type: Boolean },
@@ -21,3 +21,5 @@ const Job = mongoose.Schema({
 })
 
 module.exports = mongoose.model('Job', Job)
+
+// db.jobs.aggregate({$project: {"month": {$month: "$due_date"},"year": {$year: "$due_date"}}}, {$match: {month: 6, year: 2019}})

@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const User = mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    created_on: { type: String },
-    modified_on: { type: String },
+    created_on: { type: Date, default: Date.now },
+    modified_on: { type: Date },
     first_name: { type: String },
     last_name: { type: String },
     birthday: { type: String },

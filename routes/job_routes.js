@@ -41,7 +41,6 @@ module.exports = (app, logger, config) => {
                 req.body.salary_currency = currency
                 req.body.salary = value
             }
-            req.body.created_on = new Date()
             if (req.body.due_date) req.body.due_date = new Date(req.body.due_date)
             req.body.user_id = req.user._id 
             const job = new Job(req.body)
