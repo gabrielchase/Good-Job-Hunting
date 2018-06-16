@@ -5,10 +5,25 @@ const Job = require('../models/job')
 module.exports = (app, logger, config) => {    
     app.get('/api/user/:user_id/jobs', checkJWT, checkIfSameUser, async (req, res) => {
         const { user_id } = req.params
+        const { city, company, country, due_date, position, priority, status } = req.query 
         try {
             let query = {
                 user_id: user_id
             }
+
+            if (city) query.city = city
+            if (company) query.company = company
+            if (country) query.country = country
+            // if (due_date) query.due_date = new Date(due_date)
+            if (position) query.position = position
+            if (priority) query.priority = priority
+            // if (salary) {
+            //     let { currency, value } = handleSalary(salary)
+            //     job.salary_currency = currency
+            //     job.salary = value
+            // }
+            // if (skills) job.skills = skills
+            if (status) query.status = status
             
             const jobs = await Job.find(query)
             success(res, jobs)
@@ -25,10 +40,23 @@ module.exports = (app, logger, config) => {
                 req.body.salary = value
             }
             req.body.created_on = new Date()
-            req.body.due_date = new Date(req.body.due_date)
+            if (req.body.due_date) req.body.due_date = new Date(req.body.due_date)
             req.body.user_id = req.user._id 
             const job = new Job(req.body)
             job.save()
+            success(res, job)
+        } catch (err) {
+            fail(res, err)
+        }
+    })
+
+    app.get('/api/job/:job_id', checkJWT, async (req, res) => {
+        const { job_id } = req.params 
+        try {
+            const job = await Job.findById(job_id)
+            
+            if (job.user_id !== req.user._id) throw new Error('Unauthorized')
+
             success(res, job)
         } catch (err) {
             fail(res, err)
@@ -40,7 +68,6 @@ module.exports = (app, logger, config) => {
         const { city, company, country, cover_letter, due_date, 
             link, notes, position, priority, salary, 
             skills, status } = req.body
-        
         try {
             let job = await Job.findById(job_id)
             
@@ -50,7 +77,7 @@ module.exports = (app, logger, config) => {
             if (company) job.company = company
             if (country) job.country = country
             if (cover_letter) job.cover_letter = cover_letter
-            if (due_date) job.due_date = due_date
+            if (due_date) job.due_date = new Date(due_date)
             if (link) job.link = link
             if (notes) job.notes = notes
             if (position) job.position = position
