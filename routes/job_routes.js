@@ -1,11 +1,11 @@
-const { success, fail, handleSalary } = require('../utils')
+const { success, fail, handleSalary, queryByDate } = require('../utils')
 
 const Job = require('../models/job')
 
 module.exports = (app, logger, config) => {    
     app.get('/api/user/:user_id/jobs', checkJWT, checkIfSameUser, async (req, res) => {
         const { user_id } = req.params
-        const { city, company, country, due_date, position, priority, status } = req.query 
+        const { city, company, country, created_on, due_date, position, priority, status } = req.query 
         try {
             let query = {
                 user_id: user_id
@@ -14,7 +14,8 @@ module.exports = (app, logger, config) => {
             if (city) query.city = city
             if (company) query.company = company
             if (country) query.country = country
-            // if (due_date) query.due_date = new Date(due_date)
+            if (created_on) query.created_on = queryByDate(created_on)
+            if (due_date) query.due_date = queryByDate(due_date)
             if (position) query.position = position
             if (priority) query.priority = priority
             // if (salary) {
@@ -24,6 +25,7 @@ module.exports = (app, logger, config) => {
             // }
             // if (skills) job.skills = skills
             if (status) query.status = status
+            console.log(query)
             
             const jobs = await Job.find(query)
             success(res, jobs)
@@ -90,6 +92,7 @@ module.exports = (app, logger, config) => {
             if (skills) job.skills = skills
             if (status) job.status = status
             
+            job.modified_by = req.user
             job.modified_on = new Date()
             job.save()
 

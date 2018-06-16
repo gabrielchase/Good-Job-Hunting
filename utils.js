@@ -24,5 +24,20 @@ module.exports = {
         value = value.replace(/,/g, '')
         value = parseInt(value)
         return { currency, value }
+    },
+    queryByDate: (date) => {
+        let [ year, month, day ] = date.split('-')
+        
+        year = parseInt(year, 10)
+        month = parseInt(month, 10)
+        day = parseInt(day, 10) 
+
+        console.log(year, month, day)
+        
+        // Why is month adding 1 in new Date()?        
+        return {
+            '$gte': new Date(year, month - 1, day, 0, 0, 0),
+            '$lte': new Date(year, month - 1, day, 23, 59, 59)
+        }
     }
 }
