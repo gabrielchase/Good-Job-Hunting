@@ -8,6 +8,7 @@ const Job = mongoose.Schema({
     due_date: { type: String },
     created_on: { type: String },
     link: { type: String },
+    modified_by: { type: String },
     modified_on: { type: String },
     notes: { type: String },
     position: { type: String },
