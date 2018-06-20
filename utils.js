@@ -31,13 +31,26 @@ module.exports = {
         year = parseInt(year, 10)
         month = parseInt(month, 10)
         day = parseInt(day, 10) 
-
-        console.log(year, month, day)
         
-        // Why is month adding 1 in new Date()?        
-        return {
-            '$gte': new Date(year, month - 1, day, 0, 0, 0),
-            '$lte': new Date(year, month - 1, day, 23, 59, 59)
+        if (year && month && day) {
+            return {
+                $gte: new Date(year, month, day),
+                $lt: new Date(year, month, day + 1)
+            }
+        }
+
+        if (year && month) {
+            return {
+                $gte: new Date(year, month - 1),
+                $lt: new Date(year, month)
+            }
+        }
+
+        if (year) {
+            return {
+                $gte: new Date(year),
+                $lt: new Date(year + 1)
+            }
         }
     }
 }
