@@ -21,5 +21,3 @@ const Job = mongoose.Schema({
 })
 
 module.exports = mongoose.model('Job', Job)
-
-// db.jobs.aggregate({$project: {"month": {$month: "$due_date"},"year": {$year: "$due_date"}}}, {$match: {month: 6, year: 2019}})

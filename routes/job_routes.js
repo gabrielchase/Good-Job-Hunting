@@ -7,9 +7,7 @@ module.exports = (app, logger, config) => {
         const { user_id } = req.params
         const { city, company, country, created_on, due_date, position, priority, status } = req.query 
         try {
-            let query = {
-                user_id: user_id
-            }
+            let query = { user_id }
 
             if (city) query.city = city
             if (company) query.company = company
