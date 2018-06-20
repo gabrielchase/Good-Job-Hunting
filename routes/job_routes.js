@@ -7,7 +7,7 @@ module.exports = (app, logger, config) => {
         const { user_id } = req.params
         const { 
             city, company, country, created_on, due_date, 
-            position, priority, skills, status } = req.query 
+            position, priority, salary, skills, status } = req.query 
         try {
             let query = { user_id }
 
@@ -18,14 +18,13 @@ module.exports = (app, logger, config) => {
             if (due_date) query.due_date = queryByDate(due_date)
             if (position) query.position = position
             if (priority) query.priority = priority
-            // if (salary)  {
-            //     let { currency, value } = handleSalary(salary)
-            //     job.salary_currency = currency
-            //     job.salary = value
-            // }
+            if (salary)  {
+                let { currency, value } = handleSalary(salary)
+                query.salary_currency = currency
+                query.salary = { $gte: value }
+            }
             if (skills) query.skills = { $all: JSON.parse(skills) }
             if (status) query.status = status
-            console.log(query)
             
             const jobs = await Job.find(query)
             success(res, jobs)
