@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken')
 
 const { fail } = require('./utils')
+const { JWT_SECRET } = require('./config/config')(require('winston'))
 
-module.exports = function({ JWT_SECRET }) {
-    checkJWT = async (req, res, next) => {
+module.exports = {
+    checkJWT: async (req, res, next) => {
         try {
             const token  = req.headers.authorization.split(' ')[1]
             if (token) {
@@ -14,7 +15,7 @@ module.exports = function({ JWT_SECRET }) {
             fail(res, err)
         }
     },
-    checkIfSameUser = async(req, res, next) => {
+    checkIfSameUser: async(req, res, next) => {
         const { _id } = req.user
         const { user_id } = req.params
 

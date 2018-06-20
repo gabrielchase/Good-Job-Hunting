@@ -1,8 +1,10 @@
-const { success, fail } = require('../utils')
-
 const User = require('../models/user')
 
-module.exports = (app, logger, config) => {    
+const { success, fail } = require('../utils')
+const { checkJWT, checkIfSameUser} = require('../middlewares')
+
+
+module.exports = (app, logger) => {    
     app.get('/api/user/:user_id', checkJWT, checkIfSameUser, async (req, res) => {
         const { user_id } = req.params
         try {

@@ -1,8 +1,10 @@
-const { success, fail, handleSalary, queryByDate } = require('../utils')
-
 const Job = require('../models/job')
 
-module.exports = (app, logger, config) => {    
+const { checkJWT, checkIfSameUser} = require('../middlewares')
+const { success, fail, handleSalary, queryByDate } = require('../utils')
+
+
+module.exports = (app, logger) => {    
     app.get('/api/user/:user_id/jobs', checkJWT, checkIfSameUser, async (req, res) => {
         const { user_id } = req.params
         const { 
