@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "test",
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && ./node_modules/mocha/bin/mocha tests/**/*test.js --reporter spec  --timeout 60000  --exit",
     "dev": "nodemon app.js",
     "start": "node app.js"
   },
@@ -20,6 +20,9 @@
     "winston": "^2.4.2"
   },
   "devDependencies": {
-    "nodemon": "^1.17.5"
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.17.5",
+    "supertest": "^3.1.0"
   }
 }
