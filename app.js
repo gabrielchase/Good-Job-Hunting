@@ -49,3 +49,5 @@ require('./routes/job_routes')(app, logger)
 require('./routes/user_routes')(app, logger)
 
 app.listen(config.PORT, () => console.log(`Job Hunt Buddy server running on PORT ${config.PORT}`))
+
+module.exports = app
