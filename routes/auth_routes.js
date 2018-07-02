@@ -29,6 +29,8 @@ module.exports = (app, logger) => {
         const { email, password } = req.body
         try {
             const user = await User.findOne({ email })
+            if (user.deleted_on) throw new Error('User deleted')
+            
             const match = await bcrypt.compare(password, user.password)
             if (match) {
                 const signedJwt = jwt.sign({ _id: user._id, email: email }, JWT_SECRET, { expiresIn: '1d' })
