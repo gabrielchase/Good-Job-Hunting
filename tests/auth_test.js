@@ -19,7 +19,6 @@ describe('Authentication tests', () => {
         }
         const { statusCode, body } =  await request(app)
                                         .post('/api/register')
-                                        .set('Content-Type', 'application/json')
                                         .send(data)
         
         const userID = body.data._id
@@ -40,7 +39,6 @@ describe('Authentication tests', () => {
         }
         const { statusCode, body } =  await request(app)
                                         .post('/api/login')
-                                        .set('Content-Type', 'application/json')
                                         .send(data)
                                 
         const token = body.data.token
