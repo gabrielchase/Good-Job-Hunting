@@ -7,16 +7,16 @@ const { JWT_SECRET } = require('../config/config')(require('winston'))
 const User  = require('../models/user')
 
 describe('Authentication tests', () => {
+    const data = {
+        email: 'user1@email.com',
+        password: 'password12'
+    }
 
     before(async () => {
         await User.remove({})
     })
 
     it('Should register a user to the db', async () => {
-        const data = {
-            email: 'user1@email.com',
-            password: 'password12'
-        }
         const { statusCode, body } =  await request(app)
                                         .post('/api/register')
                                         .send(data)
@@ -33,10 +33,6 @@ describe('Authentication tests', () => {
     })
 
     it('Should log a user in and return a verified JWT', async () => {
-        const data = {
-            email: 'user1@email.com',
-            password: 'password12'
-        }
         const { statusCode, body } =  await request(app)
                                         .post('/api/login')
                                         .send(data)
@@ -52,6 +48,22 @@ describe('Authentication tests', () => {
         assert.equal(decoded.email, data.email)
         assert.exists(decoded.iat)
         assert.exists(decoded.exp)
+    })
+
+    it('Should fail login from a delete user', async () => {
+        
+        const user = await User.findOne({ email: data.email })
+        user.deleted_on = new Date()
+        await user.save()
+        
+        const { statusCode, body } =  await request(app)
+                                        .post('/api/login')
+                                        .send(data)
+        
+        console.log('body: ', body)
+        assert.equal(statusCode, 200)
+        assert.equal(body.success, false)
+        assert.equal(body.message, 'User deleted')
     })
 })
 
