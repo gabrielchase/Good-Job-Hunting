@@ -67,36 +67,23 @@ module.exports = (app, logger) => {
 
     app.put('/api/job/:job_id', checkJWT, async (req, res) => {
         const { job_id } = req.params
-        const { city, company, country, cover_letter, due_date, 
-            link, notes, position, priority, salary, 
-            skills, status } = req.body
         try {
             let job = await Job.findById(job_id)
             
             if (job.user_id !== req.user._id) throw new Error('Unauthorized')
             
-            if (city) job.city = city
-            if (company) job.company = company
-            if (country) job.country = country
-            if (cover_letter) job.cover_letter = cover_letter
-            if (due_date) job.due_date = new Date(due_date)
-            if (link) job.link = link
-            if (notes) job.notes = notes
-            if (position) job.position = position
-            if (priority) job.priority = priority
-            if (salary) {
+            req.body.due_date = new Date(due_date)
+            if (req.body.salary) {
                 let { currency, value } = handleSalary(salary)
-                job.salary_currency = currency
-                job.salary = value
+                req.body.currency = currency
+                req.body.salary = value
             }
-            if (skills) job.skills = skills
-            if (status) job.status = status
+            req.body.modified_on = new Date()
+            req.body.modified_by = req.user
             
-            job.modified_by = req.user
-            job.modified_on = new Date()
-            job.save()
+            let updatedJob = await Job.findByIdAndUpdate(job_id, { $set: req.body }, { new: true })
 
-            success(res, job)
+            success(res, updatedJob)
         } catch (err) {
             fail(res, err)
         }
