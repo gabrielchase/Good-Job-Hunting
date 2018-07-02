@@ -38,7 +38,9 @@ module.exports = (app, logger) => {
     app.delete('/api/user/:user_id', checkJWT, checkUser, async (req, res) => {
         const { user_id } = req.params
         try {
-            await User.findByIdAndRemove(user_id)
+            const user = await User.findById(user_id)
+            user.deleted_on = new Date()
+            await user.save()
             success(res)
         } catch (err) {
             fail(res, err)
