@@ -1,11 +1,11 @@
 const User = require('../models/user')
 
 const { success, fail } = require('../utils')
-const { checkJWT, checkIfSameUser} = require('../middlewares')
+const { checkJWT, checkUser} = require('../middlewares')
 
 
 module.exports = (app, logger) => {    
-    app.get('/api/user/:user_id', checkJWT, checkIfSameUser, async (req, res) => {
+    app.get('/api/user/:user_id', checkJWT, checkUser, async (req, res) => {
         const { user_id } = req.params
         try {
             const user = await User.findById({ _id: user_id })
@@ -15,7 +15,7 @@ module.exports = (app, logger) => {
         }
     })
 
-    app.put('/api/user/:user_id', checkJWT, checkIfSameUser, async (req, res) => {
+    app.put('/api/user/:user_id', checkJWT, checkUser, async (req, res) => {
         const { user_id } = req.params
         const { first_name, last_name, birthday, occupation } = req.body
         try {
@@ -33,7 +33,7 @@ module.exports = (app, logger) => {
         }
     })
 
-    app.delete('/api/user/:user_id', checkJWT, checkIfSameUser, async (req, res) => {
+    app.delete('/api/user/:user_id', checkJWT, checkUser, async (req, res) => {
         const { user_id } = req.params
         try {
             await User.findByIdAndRemove(user_id)

@@ -15,7 +15,7 @@ module.exports = {
             fail(res, err)
         }
     },
-    checkIfSameUser: async(req, res, next) => {
+    checkUser: async(req, res, next) => {
         const { _id } = req.user
         const { user_id } = req.params
 

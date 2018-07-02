@@ -1,11 +1,11 @@
 const Job = require('../models/job')
 
-const { checkJWT, checkIfSameUser} = require('../middlewares')
+const { checkJWT, checkUser} = require('../middlewares')
 const { success, fail, handleSalary, queryByDate } = require('../utils')
 
 
 module.exports = (app, logger) => {    
-    app.get('/api/user/:user_id/jobs', checkJWT, checkIfSameUser, async (req, res) => {
+    app.get('/api/user/:user_id/jobs', checkJWT, checkUser, async (req, res) => {
         const { user_id } = req.params
         const { 
             city, company, country, created_on, due_date, 
