@@ -1,11 +1,11 @@
 const Job = require('../models/job')
 
-const { checkJWT, checkUser} = require('../middlewares')
+const { checkJWT, checkUser, checkJobUser } = require('../middlewares')
 const { success, fail, handleSalary, queryByDate } = require('../utils')
 
 
 module.exports = (app, logger) => {    
-    app.get('/api/user/:user_id/jobs', checkJWT, checkUser, async (req, res) => {
+    app.get('/api/user/:user_id/jobs', checkJWT, checkUser, checkJobUser, async (req, res) => {
         const { user_id } = req.params
         const { 
             city, company, country, created_on, due_date, 
@@ -52,7 +52,7 @@ module.exports = (app, logger) => {
         }
     })
 
-    app.get('/api/job/:job_id', checkJWT, async (req, res) => {
+    app.get('/api/job/:job_id', checkJWT, checkJobUser, async (req, res) => {
         const { job_id } = req.params 
         try {
             const job = await Job.findById(job_id)
@@ -65,7 +65,7 @@ module.exports = (app, logger) => {
         }
     })
 
-    app.put('/api/job/:job_id', checkJWT, async (req, res) => {
+    app.put('/api/job/:job_id', checkJWT, checkJobUser, async (req, res) => {
         const { job_id } = req.params
         try {
             let job = await Job.findById(job_id)
@@ -89,7 +89,7 @@ module.exports = (app, logger) => {
         }
     })
 
-    app.delete('/api/job/:job_id', checkJWT, async (req, res) => {
+    app.delete('/api/job/:job_id', checkJWT, checkJobUser, async (req, res) => {
         const { job_id } = req.params
         try {
             let job = await Job.findById(job_id)
