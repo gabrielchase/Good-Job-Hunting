@@ -1,0 +1,7 @@
+{
+	"DB_PORT": "5984",
+    "DB_URL": "mongodb://user1:password1@ds125031.mlab.com:25031/good-job-hunting-test",
+    "JWT_SECRET": "secretman",
+    "SALT_ROUNDS": 10,
+    "PORT": "3000"
+}
