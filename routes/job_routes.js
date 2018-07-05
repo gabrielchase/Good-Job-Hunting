@@ -56,9 +56,6 @@ module.exports = (app, logger) => {
         const { job_id } = req.params 
         try {
             const job = await Job.findById(job_id)
-            
-            if (job.user_id !== req.user._id) throw new Error('Unauthorized')
-
             success(res, job)
         } catch (err) {
             fail(res, err)
@@ -68,13 +65,9 @@ module.exports = (app, logger) => {
     app.put('/api/job/:job_id', checkJWT, checkJobUser, async (req, res) => {
         const { job_id } = req.params
         try {
-            let job = await Job.findById(job_id)
-            
-            if (job.user_id !== req.user._id) throw new Error('Unauthorized')
-            
-            req.body.due_date = new Date(due_date)
+            if (req.body.due_date) req.body.due_date = new Date(req.body.due_date)
             if (req.body.salary) {
-                let { currency, value } = handleSalary(salary)
+                let { currency, value } = handleSalary(req.body.salary)
                 req.body.currency = currency
                 req.body.salary = value
             }
@@ -93,11 +86,9 @@ module.exports = (app, logger) => {
         const { job_id } = req.params
         try {
             let job = await Job.findById(job_id)
-            
-            if (job.user_id !== req.user._id) throw new Error('Unauthorized')
-
-            await job.remove()
-
+            job.deleted_by = req.user
+            job.deleted_on = new Date()
+            await job.save()
             success(res)
         } catch (err) {
             fail(res, err)
