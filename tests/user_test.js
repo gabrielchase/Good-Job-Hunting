@@ -1,42 +1,30 @@
 const request = require('supertest')
-const jwt = require('jsonwebtoken')
 const assert = require('chai').assert
 
 const User = require('../models/user')
 const app = require('../app')
+
+const { user_email_password_data, user_update_data } = require('./fixtures.json')
 
 
 describe('User tests', () => {
     let token
     let fixtureUserId
     let otherToken
-    const data = {
-        email: 'user1@email.com',
-        password: 'password12'
-    }
-    const updateData = {
-        email: data.email,
-        first_name: 'user',
-        last_name: 'user',
-        birthday: new Date(),
-        city: 'Manila',
-        country: 'Philippines',
-        occupation: 'Software Engineer'
-    }
-
+    user_update_data.birthday = new Date()
 
     before(async () => {
         await User.remove({})
         const registerUser =  await request(app)
                                         .post('/api/register')
-                                        .send(data)
+                                        .send(user_email_password_data)
         
         fixtureUserId = registerUser.body.data._id 
         assert.exists(fixtureUserId)
 
         const { statusCode, body } = await request(app)
                                         .post('/api/login')
-                                        .send(data)
+                                        .send(user_email_password_data)
 
         assert.equal(statusCode, 200)
         assert.equal(body.data._id, fixtureUserId)
@@ -64,11 +52,11 @@ describe('User tests', () => {
         const { statusCode, body } = await request(app)
                                         .put(`/api/user/${fixtureUserId}`)
                                         .set('Authorization', `Bearer ${token}`)
-                                        .send(updateData)
+                                        .send(user_update_data)
 
         assert.equal(statusCode, 200)
         assert.equal(body.data._id, fixtureUserId)
-        assert.equal(body.data.email, updateData.email)
+        assert.equal(body.data.email, user_update_data.email)
         // Check other attributes in the test below
     })
 
@@ -76,19 +64,19 @@ describe('User tests', () => {
         const { statusCode, body } = await request(app)
                                             .get(`/api/user/${fixtureUserId}`)
                                             .set('Authorization', `Bearer ${token}`)
-                                            .send(data)
+                                            .send(user_email_password_data)
 
         assert.equal(statusCode, 200)
         assert.equal(body.data._id, fixtureUserId)
-        assert.equal(body.data.email, data.email)
+        assert.equal(body.data.email, user_email_password_data.email)
         assert.exists(body.data.created_on)
         assert.exists(body.data.modified_on)
-        assert.equal(body.data.first_name, updateData.first_name)
-        assert.equal(body.data.last_name, updateData.last_name)
-        assert.equal(body.data.birthday, updateData.birthday)
-        assert.equal(body.data.city, updateData.city)
-        assert.equal(body.data.country, updateData.country)
-        assert.equal(body.data.occupation, updateData.occupation)
+        assert.equal(body.data.first_name, user_update_data.first_name)
+        assert.equal(body.data.last_name, user_update_data.last_name)
+        assert.equal(body.data.birthday, user_update_data.birthday)
+        assert.equal(body.data.city, user_update_data.city)
+        assert.equal(body.data.country, user_update_data.country)
+        assert.equal(body.data.occupation, user_update_data.occupation)
 
         const user = await User.findById(fixtureUserId)
         assert.equal(user.email, body.data.email)
@@ -116,7 +104,7 @@ describe('User tests', () => {
         const { statusCode, body } = await request(app)
                                             .get(`/api/user/${fixtureUserId}`)
                                             .set('Authorization', `Bearer ${otherToken}`)
-                                            .send(updateData)
+                                            .send(user_update_data)
                                             
         assert.equal(statusCode, 200)
         assert.equal(body.success, false)
@@ -158,7 +146,7 @@ describe('User tests', () => {
         const { statusCode, body } = await request(app)
                                             .put(`/api/user/${fixtureUserId}`)
                                             .set('Authorization', `Bearer ${token}`)
-                                            .send(updateData)
+                                            .send(user_update_data)
                                             
         assert.equal(statusCode, 200)
         assert.equal(body.success, false)

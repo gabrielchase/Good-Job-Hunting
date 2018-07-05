@@ -1,0 +1,14 @@
+{
+    "user_email_password_data": {
+        "email": "user1@email.com",
+        "password": "password12"
+    },
+    "user_update_data": {
+        "email": "user1@email.com",
+        "first_name": "user",
+        "last_name": "user",
+        "city": "Manila",
+        "country": "Philippines",
+        "occupation": "Software Engineer"
+    }
+}
