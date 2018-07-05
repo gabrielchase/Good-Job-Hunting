@@ -10,5 +10,40 @@
         "city": "Manila",
         "country": "Philippines",
         "occupation": "Software Engineer"
-    }
+    },
+    "jobs_fixture": {
+        "Aelogica": {
+            "company": "Aelogica",
+            "country": "Philippines",
+            "city": "BGC",
+            "due_date": "2018-12-25",
+            "notes": "Premiere rails shop",
+            "position": "Software Developer",
+            "priority": false,
+            "salary": "PHP 35,000",
+            "skills": ["Ruby", "Ruby on Rails"]
+        },
+        "Insync": {
+            "company": "Insync",
+            "country": "Philippines",
+            "city": "Quezon City",
+            "due_date": "2018-11-25",
+            "notes": "Remote",
+            "position": "Software Developer",
+            "priority": false,
+            "salary": "PHP 35,000",
+            "skills": ["Python", "Javascript", "Vue.js"]
+        },
+        "Garuda Robotics": {
+            "company": "Garuda Robotics",
+            "country": "Singapore",
+            "city": "Singapore",
+            "due_date": "2019-05-25",
+            "notes": "Singapore, Node.js",
+            "position": "Software Developer",
+            "priority": true,
+            "salary": "SGD 3,600",
+            "skills": ["Ruby", "Ruby on Rails"]
+        }
+    }  
 }
