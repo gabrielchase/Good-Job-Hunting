@@ -39,6 +39,7 @@ module.exports = (app, logger) => {
         const { user_id } = req.params
         try {
             const user = await User.findById(user_id)
+            user.deleted_by = req.user
             user.deleted_on = new Date()
             await user.save()
             success(res)

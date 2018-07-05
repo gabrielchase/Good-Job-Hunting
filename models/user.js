@@ -4,6 +4,7 @@ const User = mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     created_on: { type: Date, default: Date.now },
+    deleted_by: { type: String },
     deleted_on: { type: Date },
     modified_on: { type: Date },
     first_name: { type: String },

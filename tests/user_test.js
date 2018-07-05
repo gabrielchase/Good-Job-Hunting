@@ -130,6 +130,7 @@ describe('User tests', () => {
         assert.equal(body.success, true)
         const user = await User.findById(fixtureUserId)
         assert.exists(user.deleted_on)
+        assert.equal(user.deleted_by, fixtureUserId)
     })
 
     it('User should not be able to get itself when deleted', async () => {
