@@ -17,6 +17,7 @@
             "country": "Philippines",
             "city": "BGC",
             "due_date": "2018-12-25",
+            "link": "https://aelogica.com/careers#software_engineer",
             "notes": "Premiere rails shop",
             "position": "Software Developer",
             "priority": false,
@@ -28,6 +29,7 @@
             "country": "Philippines",
             "city": "Quezon City",
             "due_date": "2018-11-25",
+            "link": "http://jobs.insynchq.com",
             "notes": "Remote",
             "position": "Software Developer",
             "priority": false,
@@ -39,11 +41,23 @@
             "country": "Singapore",
             "city": "Singapore",
             "due_date": "2019-05-25",
+            "link": "https://garuda.io/careers/",
             "notes": "Singapore, Node.js",
             "position": "Software Developer",
             "priority": true,
             "salary": "SGD 3,600",
-            "skills": ["Ruby", "Ruby on Rails"]
+            "skills": ["Node.js", "AWS", "Mongo"]
         }
-    }  
+    },
+    "job_update_fixture": {
+        "company": "mClinica",
+        "country": "Philippines",
+        "city": "BGC",
+        "due_date": "2019-01-25",
+        "notes": "Good business development skills",
+        "position": "Software Developer",
+        "priority": false,
+        "salary": "PHP 30000",
+        "skills": ["Node.js"]
+    }
 }
