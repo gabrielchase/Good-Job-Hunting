@@ -19,23 +19,25 @@ module.exports = {
         }
     },
     checkUser: async (req, res, next) => {
-        const { _id } = req.user
         const { user_id } = req.params
         
         const user = await User.findById(user_id) 
         if (user.deleted_on) fail(res, new Error('User deleted'))
 
-        if (_id !== user_id) 
+        if (req.user._id !== user_id) 
             fail(res, new Error('Unauthorized'))
         else    
             next()
     },
     checkJobUser: async (req, res, next) => {
-        const { _id } = req.user
         const { job_id } = req.params
 
         const job = await Job.findById(job_id)
-        if (job.user_id === _id) next()
-        else fail(res, new Error('Unauthorized'))
+        if (job.deleted_on) fail(res, new Error('Job deleted'))
+
+        if (req.user._id !== job.user_id) 
+            fail(res, new Error('Unauthorized'))
+        else 
+            next()
     }
 }
