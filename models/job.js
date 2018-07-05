@@ -5,6 +5,8 @@ const Job = mongoose.Schema({
     company: { type: String },
     country: { type: String },
     cover_letter: { type: String },
+    deleted_by: { type: String },
+    deleted_on: { type: Date },
     due_date: { type: Date },
     created_on: { type: Date, default: Date.now },
     link: { type: String },
