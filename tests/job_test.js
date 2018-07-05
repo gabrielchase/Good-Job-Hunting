@@ -9,10 +9,11 @@ const app = require('../app')
 const { user_email_password_data, jobs_fixture, job_update_fixture } = require('./fixtures.json')
 const { handleSalary } = require('../utils')
 
-describe('Job tests', () => {
+describe('Job tests', async () => {
     let token 
     let fixtureUserId
     let otherToken
+    let deletedJobId
 
     before(async () => {
         await User.remove({})
@@ -131,6 +132,8 @@ describe('Job tests', () => {
         assert.equal(updatedJob.salary, value)
         assert.equal(updatedJob.due_date.toISOString(), new Date(job_update_fixture.due_date).toISOString())
         assert.equal(updatedJob.user_id, fixtureUserId)
+        assert.equal(updatedJob.modified_by, fixtureUserId)
+        assert.exists(updatedJob.modified_on)
     })
 
     it('Should delete a job', async () => {
@@ -145,6 +148,65 @@ describe('Job tests', () => {
         const deletedJob = await Job.findById(job._id) 
         assert.exists(deletedJob.deleted_on)
         assert.equal(deletedJob.deleted_by, fixtureUserId)
+        deletedJobId = job._id
+    })
+
+    it('Other user should not be able to access job data', async () => {
+        const jobs = await Job.find({})
+        const jobId = jobs[0]._id
+        const { statusCode, body } = await request(app)
+                                            .get(`/api/job/${jobId}`)
+                                            .set('Authorization', `Bearer ${otherToken}`)
+                                            
+        assert.equal(statusCode, 200)
+        assert.equal(body.success, false)
+        assert.equal(body.message, 'Unauthorized')
+    })
+
+    it('Other user should not be able to update job data', async () => {
+        const jobs = await Job.find({})
+        const jobId = jobs[0]._id
+        const { statusCode, body } = await request(app)
+                                            .get(`/api/job/${jobId}`)
+                                            .set('Authorization', `Bearer ${otherToken}`)
+                                            .send(job_update_fixture)
+                                            
+        assert.equal(statusCode, 200)
+        assert.equal(body.success, false)
+        assert.equal(body.message, 'Unauthorized')
+    })
+    
+    it('Other user should not be able to delete job', async () => {
+        const jobs = await Job.find({})
+        const jobId = jobs[0]._id
+        const { statusCode, body } = await request(app)
+                                            .delete(`/api/job/${jobId}`)
+                                            .set('Authorization', `Bearer ${otherToken}`)
+                                            
+        assert.equal(statusCode, 200)
+        assert.equal(body.success, false)
+        assert.equal(body.message, 'Unauthorized')
+    })
+
+    it('User should not be able to get job when deleted', async () => {
+        const { statusCode, body } = await request(app)
+                                            .get(`/api/job/${deletedJobId}`)
+                                            .set('Authorization', `Bearer ${token}`)
+        
+        assert.equal(statusCode, 200)
+        assert.equal(body.success, false)
+        assert.equal(body.message, 'Job deleted')
+    })
+
+    it('User should not be able to update itself when deleted', async () => {
+        const { statusCode, body } = await request(app)
+                                            .put(`/api/job/${deletedJobId}`)
+                                            .set('Authorization', `Bearer ${token}`)
+                                            .send(job_update_fixture)
+
+        assert.equal(statusCode, 200)
+        assert.equal(body.success, false)
+        assert.equal(body.message, 'Job deleted')
     })
 })
 
