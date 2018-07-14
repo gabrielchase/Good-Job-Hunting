@@ -1,8 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-
 const chalk = require('chalk')
+const cors = require('cors')
 const winston = require('winston')
 const expressLogger = require('express-winston')
 const logger = new (winston.Logger)({
@@ -35,6 +35,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error'))
 
 const app = express()
 
+app.use(cors())
 app.use(bodyParser.json({ limit: '192mb' })) 
 app.use(bodyParser.urlencoded({ extended: true })) 
 app.use(expressLogger.logger({
