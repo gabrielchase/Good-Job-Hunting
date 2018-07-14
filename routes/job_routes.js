@@ -5,7 +5,7 @@ const { success, fail, handleSalary, queryByDate } = require('../utils')
 
 
 module.exports = (app, logger) => {    
-    app.get('/api/user/:user_id/jobs', checkJWT, checkUser, checkJobUser, async (req, res) => {
+    app.get('/api/user/:user_id/jobs', checkJWT, checkUser, async (req, res) => {
         const { user_id } = req.params
         const { 
             city, company, country, created_on, due_date, 
